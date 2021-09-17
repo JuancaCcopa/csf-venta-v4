@@ -45,7 +45,9 @@ export class PanelCajaComponent implements OnInit {
   wCodAseguradora: string = '';
   wCodCia: string = '';
   gEstacionTrabajo: any[];
-  gIdePagosBot:number=0;
+  gIdePagosBot: number = 0;
+  gFlgPagoUsado: boolean = false;
+
   //-------------------
   //entitidad guardar
   confirmacionRegistrar: any;
@@ -531,7 +533,7 @@ export class PanelCajaComponent implements OnInit {
 
   onBuscarVenta() {
     this.onLimpiarInput();
-    
+
     var {
       numVentaBuscar
     } = this.formularioBusqueda.value;
@@ -552,7 +554,7 @@ export class PanelCajaComponent implements OnInit {
         if (this.isTipoBusquedadVenta == "V") {
 
           this.goGetVentaCabeceraPorCodVenta(this.selectCodVenta);
-          
+
         } else if (this.isTipoBusquedadVenta == "C") {
 
           this.goGetComprobante(numVentaBuscar, "L");
@@ -618,9 +620,9 @@ export class PanelCajaComponent implements OnInit {
             this.getTipoAfectacionIGV(resp.porcentajeimpuesto);
             this.isDisableTipoAfectacion = true;
           }
-debugger
+          debugger
           this.listModeloPago = resp.cuadredecaja;
-         
+
           this.selectCodVenta = resp.codventa;
           this.goGetVentaDetallePorCodVenta(this.selectCodVenta);
 
@@ -1362,6 +1364,8 @@ debugger
 
     }
 
+    
+    debugger
 
     var value = {
       maquina: this.isNombreMaquina,
@@ -1384,8 +1388,12 @@ debugger
       numdocumentoIdentidad: numdocumentoIdentidad,
       codTipoCliente: codTipoCliente,
       tipoPagos: this.listModeloPago,
-      idePagosBot : this.gIdePagosBot
+      idePagosBot: this.gIdePagosBot,
+      flgPagoUsado: this.gFlgPagoUsado,
+      flg_otorgar: wFlg_otorgar,
+      tipoCodigoBarrahash: this.efactTipoCodigoBarrahash.valor
     }
+
     //wFlg_electronico
     this.confirmacionRegistrar = value;
 
@@ -1946,7 +1954,7 @@ debugger
     const { codVenta } = this.formularioCabecera.value;
 
     this.ventasCajaService
-      .getObtenerLinkBot("0", "0", "0", "", codVenta, "4")
+      .getObtnerPagoBot("0", "0", "0", "", codVenta, "4")
       .subscribe(
         (resp: any) => {
 
@@ -1960,7 +1968,7 @@ debugger
               return
             } else {
 
-              this.listModeloPago =[];
+              this.listModeloPago = [];
 
               this.listModeloPago.push(
                 {
@@ -1977,7 +1985,9 @@ debugger
                 }
               );
 
-             this.gIdePagosBot= resp.idePagosBot;
+              this.gIdePagosBot = resp.idePagosBot;
+              this.gFlgPagoUsado = true;
+
 
             }
 
